@@ -2,29 +2,29 @@
 
 class Options extends Obj {
 
-	public function get($name=null,$default=null) {
+	public function get($name = null, $default = null) {
 
 		$name = strtolower($name);
 		$name = trim($name);
 
 		$opt = $this->getDb()->getOne('options',
 			array(
-				'where'=>array(
-					'name'=>$name
+				'where' => array(
+					'name' => $name
 				)
 			)
 		);
 
-		if(empty($opt)){
+		if(empty($opt)) {
 			return $default;
 		}
 
 		return $opt['value'];
 	}
 
-	public function getAll($type=null) {
+	public function getAll($type = null) {
 
-		if($type === 'list'){
+		if($type === 'list') {
 			return $this->getDb()->getList('options',array('name','value'));
 		}
 
@@ -38,23 +38,23 @@ class Options extends Obj {
 
 		$opt = $this->get($name,false);
 
-		if($opt === false){
+		if($opt === false) {
 
 			$this->getDb()->insert('options',array(
-				'name'=>$name,
-				'value'=>$value
+				'name' => $name,
+				'value' => $value
 			));
 		}
 
-		else{
+		else {
 
 			$this->getDb()->update('options',
 				array(
-					'value'=>$value
+					'value' => $value
 				),
 				array(
-					'where'=>array(
-						'name'=>$name
+					'where' => array(
+						'name' => $name
 					)
 				)
 			);

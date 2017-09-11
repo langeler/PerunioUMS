@@ -1,6 +1,6 @@
 <?php
 
-class Controller extends Obj{
+class Controller extends Obj {
 
 	private $tplPrefix = '../pages/';
 
@@ -12,14 +12,14 @@ class Controller extends Obj{
 	public function register() {
 
 		$_data = array(
-			'username'=>'',
-			'password'=>'',
-			'confirm_password'=>'',
-			'email'=>'',
-			'display_name'=>''
+			'username' => '',
+			'password' => '',
+			'confirm_password' => '',
+			'email' => '',
+			'display_name' => ''
 		);
 
-		if(Utils::isPost()){
+		if(Utils::isPost()) {
 
 			$itsOk = true;
 
@@ -42,7 +42,7 @@ class Controller extends Obj{
 			}
 
 			//captcha challenge
-			if($itsOk && !Utils::checkCaptcha()){
+			if($itsOk && !Utils::checkCaptcha()) {
 
 				$itsOk = false;
 
@@ -65,7 +65,7 @@ class Controller extends Obj{
 					);
 				}
 
-				if($itsOk && (strlen($data['username']) < 3 || strlen($data['username']) > 25)){
+				if($itsOk && (strlen($data['username']) < 3 || strlen($data['username']) > 25)) {
 
 					$itsOk = false;
 
@@ -76,7 +76,7 @@ class Controller extends Obj{
 				}
 
 				//check if valid email
-				if($itsOk && !Utils::isEmail($data['email'])){
+				if($itsOk && !Utils::isEmail($data['email'])) {
 
 					$itsOk = false;
 
@@ -87,7 +87,7 @@ class Controller extends Obj{
 				}
 
 				//check if username is available
-				if($itsOk && !User::make()->usernameAvailable($data['username'])){
+				if($itsOk && !User::make()->usernameAvailable($data['username'])) {
 
 					$itsOk = false;
 
@@ -98,7 +98,7 @@ class Controller extends Obj{
 				}
 
 				//check if email is available
-				if($itsOk && !User::make()->emailAvailable($data['email'])){
+				if($itsOk && !User::make()->emailAvailable($data['email'])) {
 
 					$itsOk = false;
 
@@ -109,7 +109,7 @@ class Controller extends Obj{
 				}
 
 				//check if password length is correct
-				if($itsOk && strlen( $data['password']) < 8 ){
+				if($itsOk && strlen( $data['password']) < 8 ) {
 
 					$itsOk = false;
 
@@ -120,7 +120,7 @@ class Controller extends Obj{
 				}
 
 				//check password confirmation
-				if($itsOk && $data['password'] != $data['confirm_password']){
+				if($itsOk && $data['password'] != $data['confirm_password']) {
 
 					$itsOk = false;
 
@@ -130,11 +130,11 @@ class Controller extends Obj{
 					);
 				}
 
-				if($itsOk){
+				if($itsOk) {
 
-					if(User::make()->add($data)){
+					if(User::make()->add($data)) {
 
-						if((int)getOption('email_activation_required',0) == 0){
+						if((int)getOption('email_activation_required',0) == 0) {
 
 							Utils::addFlash(
 								lang('users_registered_success'),
@@ -142,7 +142,7 @@ class Controller extends Obj{
 							);
 						}
 
-						else{
+						else {
 
 							Utils::addFlash(
 								lang('users_registered_success_email_activation_required'),
@@ -153,7 +153,7 @@ class Controller extends Obj{
 						Utils::redirect('/login');
 					}
 
-					else{
+					else {
 
 						Utils::addFlash(
 							lang('unknown_error'),
@@ -164,7 +164,7 @@ class Controller extends Obj{
 			}
 		}
 
-		else{
+		else {
 			$data = $_data;
 		}
 
@@ -176,19 +176,19 @@ class Controller extends Obj{
 	public function login() {
 
 		$data = array(
-			'username'=>'',
-			'password'=>'',
+			'username' => '',
+			'password' => '',
 		);
 
-		if(Utils::isPost()){
+		if(Utils::isPost()) {
 
 			$data = (array)$_POST['data'] + $data;
 
-			if(Utils::checkCaptcha()){
+			if(Utils::checkCaptcha()) {
 
 				$user = User::make()->loginUser($data);
 
-				if($user === false){
+				if($user === false) {
 
 					Utils::addFlash(
 						lang('users_username_or_password_incorrect'),
@@ -196,9 +196,9 @@ class Controller extends Obj{
 					);
 				}
 
-				else{
+				else {
 
-					if((int)$user['active'] == 0){
+					if((int)$user['active'] == 0) {
 
 						Utils::addFlash(
 							lang('users_active_account_required'),
@@ -206,7 +206,7 @@ class Controller extends Obj{
 						);
 					}
 
-					else{
+					else {
 
 						Utils::addFlash(
 							lang('users_welcome_message'),
@@ -219,7 +219,7 @@ class Controller extends Obj{
 				}
 			}
 
-			else{
+			else {
 
 				Utils::addFlash(
 					lang('users_captcha_fail'),
@@ -240,15 +240,15 @@ class Controller extends Obj{
 		Utils::redirect('/');
 	}
 
-	private function _editAccount($user=array()) {
+	private function _editAccount($user = array()) {
 
 		$data = (array)$_POST['data'];
 
-		if(isset($data['username'])){
+		if(isset($data['username'])) {
 
 			$itsOk = true;
 
-			if(!Utils::isEmail($data['email'])){
+			if(!Utils::isEmail($data['email'])) {
 
 				$itsOk = false;
 
@@ -259,7 +259,7 @@ class Controller extends Obj{
 			}
 
 			//check if email is available
-			if($itsOk && $data['email'] != $user['email'] && !User::make()->emailAvailable($data['email'])){
+			if($itsOk && $data['email'] != $user['email'] && !User::make()->emailAvailable($data['email'])) {
 
 				$itsOk = false;
 
@@ -270,7 +270,7 @@ class Controller extends Obj{
 			}
 
 			//check if password length is correct
-			if($itsOk && $data['new_password'] != '' && strlen( $data['new_password'] ) < 8){
+			if($itsOk && $data['new_password'] != '' && strlen( $data['new_password'] ) < 8) {
 
 				$itsOk = false;
 
@@ -280,7 +280,7 @@ class Controller extends Obj{
 				);
 			}
 
-			if($itsOk){
+			if($itsOk) {
 
 				$dataToUpdate = array(
 					'display_name' => $data['display_name'],
@@ -288,17 +288,17 @@ class Controller extends Obj{
 				);
 
 				//change password only if the new password is not empty
-				if($data['new_password'] != ''){
+				if($data['new_password'] != '') {
 					$dataToUpdate['password'] = Utils::hashPassword($data['new_password']);
 				}
 
-				$res = $this->getDb()->update('users',$dataToUpdate,array(
-					'where'=>array(
-						'id'=>$user['id']
+				$res = $this->getDb()->update('users', $dataToUpdate, array(
+					'where' => array(
+						'id' => $user['id']
 					)
 				));
 
-				if($res){
+				if($res) {
 
 					Utils::addFlash(
 						lang('users_account_updated_successfully'),
@@ -310,7 +310,7 @@ class Controller extends Obj{
 					Utils::authUser($user);
 				}
 
-				else{
+				else {
 
 					Utils::addFlash(
 						lang('unknown_error'),
@@ -320,7 +320,7 @@ class Controller extends Obj{
 			}
 		}
 
-		else{
+		else {
 			$data = $data + $user;
 		}
 
@@ -335,19 +335,19 @@ class Controller extends Obj{
 
 		$user = User::make()->get( Utils::currentUserInfo('username') );
 
-		if(empty($user)){
+		if(empty($user)) {
 			Utils::redirect('/');
 		}
 
-		if(Utils::isPost()){
+		if(Utils::isPost()) {
 
 			$data = (array)$_POST['data'] + array('password'=>'');
 
-			if(Utils::checkPassword($data['password'] , $user['password'])){
+			if(Utils::checkPassword($data['password'] , $user['password'])) {
 				return $this->_editAccount($user);
 			}
 
-			else{
+			else {
 
 				Utils::addFlash(
 					lang('users_password_incorrect'),
@@ -361,16 +361,16 @@ class Controller extends Obj{
 
 	public function forgotPassword() {
 
-		if(Utils::isPost()){
+		if(Utils::isPost()) {
 
 			$data = (array)$_POST['data'] + array(
-					'email'=>''
+					'email' => ''
 				);
 
 			$itsOk = true;
 
 			//captcha challenge
-			if(!Utils::checkCaptcha()){
+			if(!Utils::checkCaptcha()) {
 
 				$itsOk = false;
 
@@ -380,7 +380,7 @@ class Controller extends Obj{
 				);
 			}
 
-			if($itsOk && User::make()->emailAvailable($data['email'])){
+			if($itsOk && User::make()->emailAvailable($data['email'])) {
 
 				$itsOk = false;
 
@@ -390,9 +390,9 @@ class Controller extends Obj{
 				);
 			}
 
-			if($itsOk){
+			if($itsOk) {
 
-				if(User::make()->sendPasswordRecovery($data['email'])){
+				if(User::make()->sendPasswordRecovery($data['email'])) {
 
 					Utils::addFlash(
 						lang('email_recovery_message_sent'),
@@ -402,7 +402,7 @@ class Controller extends Obj{
 					Utils::redirect('/');
 				}
 
-				else{
+				else {
 					Utils::addFlash(
 						lang('unknown_error'),
 						'danger'
@@ -419,34 +419,34 @@ class Controller extends Obj{
 		$username = (isset($_GET['username']) ? $_GET['username'] : null);
 		$token = (isset($_GET['token']) ? $_GET['token'] : null);
 
-		if(is_null($username) || is_null($token) ||empty($username) || empty($token) ){
+		if(is_null($username) || is_null($token) || empty($username) || empty($token)) {
 			Utils::redirect('/');
 		}
 
 		$user = $this->getDb()->getOne('users',
 			array(
-				'where'=>array(
-					'username'=>$username,
-					'token'=>$token
+				'where' => array(
+					'username' => $username,
+					'token' => $token
 				)
 			)
 		);
 
-		if(empty($user)){
+		if(empty($user)) {
 			Utils::redirect('/');
 		}
 
-		if(Utils::isPost()){
+		if(Utils::isPost()) {
 
 			$data = (array)$_POST['data'] + array(
-				'password'=>'',
-				'confirm_password'=>''
+				'password' => '',
+				'confirm_password' => ''
 			);
 
 			$itsOk = true;
 
 			//check if password length is correct
-			if(strlen( $data['password'] ) < 8 ){
+			if(strlen( $data['password'] ) < 8 ) {
 
 				$itsOk = false;
 
@@ -457,7 +457,7 @@ class Controller extends Obj{
 			}
 
 			//check password confirmation
-			if($itsOk && $data['password'] != $data['confirm_password'] ){
+			if($itsOk && $data['password'] != $data['confirm_password']) {
 
 				$itsOk = false;
 
@@ -467,9 +467,9 @@ class Controller extends Obj{
 				);
 			}
 
-			if($itsOk){
+			if($itsOk) {
 
-				if(User::make()->changeUserPassword($user['id'],$data['password'])){
+				if(User::make()->changeUserPassword($user['id'], $data['password'])) {
 					Utils::addFlash(
 						lang('users_password_changed_success'),
 						'success'
@@ -478,7 +478,7 @@ class Controller extends Obj{
 					Utils::redirect('/login');
 				}
 
-				else{
+				else {
 
 					Utils::addFlash(
 						lang('unknown_error'),
@@ -496,7 +496,7 @@ class Controller extends Obj{
 		$username = (isset($_GET['username']) ? $_GET['username'] : null);
 		$token = (isset($_GET['token']) ? $_GET['token'] : null);
 
-		if(User::make()->activateAccount($username,$token)){
+		if(User::make()->activateAccount($username,$token)) {
 
 			Utils::addFlash(
 				lang('users_account_activated'),
@@ -512,13 +512,13 @@ class Controller extends Obj{
 		if(Utils::isPost()){
 
 			$data = (array)$_POST['data'] + array(
-				'email'=>''
+				'email' => ''
 			);
 
 			$itsOk = true;
 
 			//captcha challenge
-			if(!Utils::checkCaptcha()){
+			if(!Utils::checkCaptcha()) {
 
 				$itsOk = false;
 
@@ -528,7 +528,7 @@ class Controller extends Obj{
 				);
 			}
 
-			if($itsOk && User::make()->emailAvailable($data['email'])){
+			if($itsOk && User::make()->emailAvailable($data['email'])) {
 
 				$itsOk = false;
 
@@ -538,9 +538,9 @@ class Controller extends Obj{
 				);
 			}
 
-			if($itsOk){
+			if($itsOk) {
 
-				if(User::make()->resendActivation($data['email'])){
+				if(User::make()->resendActivation($data['email'])) {
 
 					Utils::addFlash(
 						lang('email_activation_sent'),
@@ -550,7 +550,7 @@ class Controller extends Obj{
 					Utils::redirect('/');
 				}
 
-				else{
+				else {
 
 					Utils::addFlash(
 						lang('unknown_error'),
@@ -572,10 +572,10 @@ class Controller extends Obj{
 		if($action == 'add'){
 
 			$data = array(
-				'name'=>''
+				'name' => ''
 			);
 
-			if(Utils::isPost()){
+			if(Utils::isPost()) {
 
 				$data = (array)$_POST['data'] + $data;
 
@@ -592,9 +592,9 @@ class Controller extends Obj{
 			$this->getTpl()->setVar('data',$data);
 		}
 
-		elseif($action == 'delete'){
+		elseif($action == 'delete') {
 
-			if($per_id == 1){
+			if($per_id == 1) {
 
 				Utils::addFlash(
 					'Cannot delete first permission',
@@ -606,13 +606,13 @@ class Controller extends Obj{
 
 			$res = $this->getDb()->delete('permissions',
 				array(
-					'where'=>array(
-						'id'=>$per_id
+					'where' => array(
+						'id' => $per_id
 					)
 				)
 			);
 
-			if($res){
+			if($res) {
 
 				//cleanup all permission relations
 				$this->getDb()->query(
@@ -635,7 +635,7 @@ class Controller extends Obj{
 				);
 			}
 
-			else{
+			else {
 				Utils::addFlash(
 					lang('unknown_error'),
 					'danger'
@@ -645,17 +645,17 @@ class Controller extends Obj{
 			Utils::redirect('/admin_permissions');
 		}
 
-		elseif($action == 'edit'){
+		elseif($action == 'edit') {
 
 			$permission = Permissions::make()->get($per_id);
 
-			if(empty($permission)){
+			if(empty($permission)) {
 				Utils::redirect('/admin_permissions');
 			}
 
 			$data = $permission;
 
-			if(Utils::isPost()){
+			if(Utils::isPost()) {
 
 				$data = (array)$_POST['data'] + $data;
 
@@ -672,7 +672,7 @@ class Controller extends Obj{
 			$this->getTpl()->setVar('data',$data);
 		}
 
-		else{
+		else {
 
 			$permissions = Permissions::make()->getAll();
 			$permissions = Utils::h($permissions);
@@ -688,7 +688,7 @@ class Controller extends Obj{
 		$action = (isset($_GET['action']) ? $_GET['action'] : 'list');
 		$user_id = (isset($_GET['id']) ? $_GET['id'] : null);
 
-		if($action == 'edit'){
+		if($action == 'edit') {
 
 			$user = User::make()->get($user_id,'id');
 			unset($user['password']);
@@ -699,7 +699,7 @@ class Controller extends Obj{
 
 			$data = $user;
 
-			if(Utils::isPost()){
+			if(Utils::isPost()) {
 
 				$data = (array)$_POST['data'] + $data;
 				$edit_type = isset($_POST['edit_type']) ? $_POST['edit_type'] : null;
@@ -719,9 +719,7 @@ class Controller extends Obj{
 					}
 
 					//check if email is available
-					if($itsOk && $data['email'] != $user['email'] &&
-
-						!User::make()->emailAvailable($data['email'])){
+					if($itsOk && $data['email'] != $user['email'] && !User::make()->emailAvailable($data['email'])) {
 
 						$itsOk = false;
 
@@ -732,7 +730,7 @@ class Controller extends Obj{
 					}
 
 					//check if password length is correct
-					if($itsOk && $data['new_password'] != '' && strlen( $data['new_password'] ) < 8 ){
+					if($itsOk && $data['new_password'] != '' && strlen( $data['new_password'] ) < 8 ) {
 
 						$itsOk = false;
 
@@ -742,10 +740,10 @@ class Controller extends Obj{
 						);
 					}
 
-					if($itsOk){
+					if($itsOk) {
 
 						//keep the admin active
-						if($user['id'] == 1){
+						if($user['id'] == 1) {
 							$data['active'] = 1;
 						}
 
@@ -756,27 +754,27 @@ class Controller extends Obj{
 						);
 
 						//change password only if the new password is not empty
-						if($data['new_password'] != ''){
+						if($data['new_password'] != '') {
 							$dataToUpdate['password'] = Utils::hashPassword($data['new_password']);
 						}
 
 						$res = $this->getDb()->update('users',
 							$dataToUpdate,
 							array(
-								'where'=>array(
-									'id'=>$user['id']
+								'where' => array(
+									'id' => $user['id']
 								)
 							)
 						);
 
-						if($res){
+						if($res) {
 							Utils::addFlash(
 								lang('users_account_updated_successfully'),
 								'success'
 							);
 						}
 
-						else{
+						else {
 							Utils::addFlash(
 								lang('unknown_error'),
 								'danger'
@@ -810,17 +808,17 @@ class Controller extends Obj{
 			$this->getTpl()->setVar('userPermissions',$userPermissions);
 		}
 
-		elseif($action == 'delete'){
+		elseif($action == 'delete') {
 
 			$res = $this->getDb()->delete('users',
 				array(
-					'where'=>array(
-						'id'=>$user_id
+					'where' => array(
+						'id' => $user_id
 					)
 				)
 			);
 
-			if($res){
+			if($res) {
 
 				//cleanup all user permission
 				$this->getDb()->query(
@@ -839,7 +837,7 @@ class Controller extends Obj{
 				);
 			}
 
-			else{
+			else {
 				Utils::addFlash(
 					lang('unknown_error'),
 					'danger'
@@ -849,7 +847,7 @@ class Controller extends Obj{
 			Utils::redirect('/admin_users');
 		}
 
-		else{
+		else {
 
 			$users = User::make()->getAll();
 			$users = Utils::h($users);
@@ -865,27 +863,27 @@ class Controller extends Obj{
 		$action = (isset($_GET['action']) ? $_GET['action'] : 'list');
 		$page_id = (isset($_GET['id']) ? $_GET['id'] : null);
 
-		if($action == 'edit'){
+		if($action == 'edit') {
 
 			$page = Pages::make()->get($page_id);
 			$data = $page;
 
-			if(empty($page)){
+			if(empty($page)) {
 				Utils::redirect('/admin_pages');
 			}
 
-			if(Utils::isPost()){
+			if(Utils::isPost()) {
 
 				$edit_type = isset($_POST['edit_type']) ? $_POST['edit_type'] : null;
 				$data = (array)$_POST['data'] + $data;
 
-				if($edit_type == 'page'){
+				if($edit_type == 'page') {
 
 					$itsOk = true;
 
-					if((int)$data['private'] <= 0){
+					if((int)$data['private'] <= 0) {
 
-						if(!Pages::make()->isAllowedToBePublic($page_id)){
+						if(!Pages::make()->isAllowedToBePublic($page_id)) {
 
 							$itsOk = false;
 
@@ -898,9 +896,9 @@ class Controller extends Obj{
 						}
 					}
 
-					else{
+					else {
 
-						if(!Pages::make()->isAllowedToBePrivate($page_id)){
+						if(!Pages::make()->isAllowedToBePrivate($page_id)) {
 
 							$itsOk = false;
 
@@ -913,15 +911,15 @@ class Controller extends Obj{
 						}
 					}
 
-					if($itsOk){
+					if($itsOk) {
 
 						$this->getDb()->update('pages',
 							array(
 								'private' => ((int)$data['private'] > 0 ? 1 : 0)
 							),
 							array(
-								'where'=>array(
-									'id'=>$page_id
+								'where' => array(
+									'id' => $page_id
 								)
 							)
 						);
@@ -933,14 +931,14 @@ class Controller extends Obj{
 					}
 				}
 
-				elseif($edit_type == 'permissions'){
+				elseif($edit_type == 'permissions') {
 
 					$permissions = isset($data['permissions']) ? $data['permissions'] : array();
 
 					Permissions::make()->removePagePermissions($page_id);
 
 					foreach ($permissions as $per) {
-						Permissions::make()->assignPermissionToPage($per,$page_id);
+						Permissions::make()->assignPermissionToPage($per, $page_id);
 					}
 
 					Utils::addFlash(
@@ -957,7 +955,7 @@ class Controller extends Obj{
 			$this->getTpl()->setVar('data',$data);
 		}
 
-		else{
+		else {
 
 			//check for new pages
 			$pages = Pages::make()->checkForNewPages();
@@ -979,11 +977,11 @@ class Controller extends Obj{
 			'default_permission' => 2,
 		);
 
-		if(Utils::isPost()){
+		if(Utils::isPost()) {
 
 			foreach ($defaultOptions as $k => $v) {
 
-				if(isset($_POST['data'][$k])){
+				if(isset($_POST['data'][$k])) {
 
 					//remove special characters in just is case !
 					if($k == 'website_language'){
@@ -1018,7 +1016,7 @@ class Controller extends Obj{
 	/**
 	 * @param string $page_name custom page name in pages directory
 	 */
-	public function customPage($page_name){
+	public function customPage($page_name) {
 
 		// this method handle custom pages
 		$this->getTpl()->render($this->tplPrefix . $page_name);

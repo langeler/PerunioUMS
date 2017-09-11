@@ -4,7 +4,7 @@ class Container {
 
 	private static $_objects = array();
 
-	public static function set($name,$value=null){
+	public static function set($name,$value = null) {
 		$name = ucfirst(strtolower($name));
 
 		self::$_objects[$name] = $value;
@@ -13,7 +13,7 @@ class Container {
 	public static function get($name, $default = null) {
 		$name = ucfirst(strtolower($name));
 
-		if(isset(self::$_objects[$name])){
+		if(isset(self::$_objects[$name])) {
 			return self::$_objects[$name];
 		}
 

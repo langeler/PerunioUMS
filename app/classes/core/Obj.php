@@ -14,15 +14,15 @@ class Obj {
 
 	private static $instances = array();
 
-	public static function make($cache=true){
+	public static function make($cache = true) {
 
 		$className = get_called_class();
 
-		if(!$cache){
+		if(!$cache) {
 			return new static();
 		}
 
-		if(!isset(self::$instances[$className])){
+		if(!isset(self::$instances[$className])) {
 			self::$instances[$className] = new static();
 		}
 

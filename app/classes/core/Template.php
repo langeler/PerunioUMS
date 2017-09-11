@@ -10,29 +10,29 @@ class Template {
 	private $_activeBlocks = null;
 	private static $instances = null;
 
-	public static function make($cache=true){
+	public static function make($cache = true) {
 
-		if(!$cache){
+		if(!$cache) {
 			return new static();
 		}
 
-		if(is_null(self::$instances)){
+		if(is_null(self::$instances)) {
 			self::$instances = new static();
 		}
 
 		return self::$instances;
 	}
 
-	public function __construct($viewsDir=null) {
+	public function __construct($viewsDir = null) {
 
-		if(!is_null($viewsDir)){
+		if(!is_null($viewsDir)) {
 			$this->templateDir = $viewsDir;
 		}
 	}
 
-	public function fetch($name = '',$default='') {
+	public function fetch($name = '',$default = '') {
 
-		if(isset($this->_blocks[$name])){
+		if(isset($this->_blocks[$name])) {
 			return $this->_blocks[$name];
 		}
 
@@ -41,27 +41,27 @@ class Template {
 
 	public function getVar($name, $default = null) {
 
-		if(isset($this->vars[$name])){
+		if(isset($this->vars[$name])) {
 			return $this->vars[$name];
 		}
 
 		return $default;
 	}
 
-	public function setVar($name, $value=null) {
+	public function setVar($name, $value = null) {
 
-		if(is_array($name)){
+		if(is_array($name)) {
 			$this->vars = $name + $this->vars;
 		}
 
-		else{
+		else {
 			$this->vars[$name] = $value;
 		}
 	}
 
 	public function setBlock($name = '',$content='') {
 
-		if(!isset($this->_blocks[$name])){
+		if(!isset($this->_blocks[$name])) {
 			$this->_blocks[$name] = '';
 		}
 
@@ -72,7 +72,7 @@ class Template {
 
 		$elementPath = $this->templateDir . '/elements/' . $name . '.' . $this->_ext;
 
-		if(file_exists($elementPath)){
+		if(file_exists($elementPath)) {
 
 			ob_start();
 
@@ -103,15 +103,15 @@ class Template {
 		}
 	}
 
-	public function _includeFile($viewPath,$vars = array()) {
+	public function _includeFile($viewPath, $vars = array()) {
 
 		extract($vars);
 
-		if(file_exists($viewPath)){
+		if(file_exists($viewPath)) {
 			include $viewPath;
 		}
 
-		else{
+		else {
 
 			throw new Exception(
 				'View not found ('. str_replace(
@@ -135,7 +135,7 @@ class Template {
 		return file_exists($this->getTemplatePath($tplName));
 	}
 
-	public function render($view = false,array $vars=array(),$layout= null,$echo=true) {
+	public function render($view = false, array $vars = array(), $layout = null,$echo = true) {
 
 		$this->vars = $vars + $this->vars;
 
@@ -158,23 +158,23 @@ class Template {
 
 		ob_start();
 
-		if($layout !== false ){
+		if($layout !== false) {
 
 			$_layoutPath = $this->templateDir . '/layouts/' . $layout . '.' . $this->_ext;
 
 			$this->_includeFile($_layoutPath,$this->vars);
 		}
 
-		else{
+		else {
 			echo $this->fetch('content');
 		}
 
-		if($echo){
+		if($echo) {
 			echo ob_get_clean();
 
 		}
 
-		else{
+		else {
 			return ob_get_clean();
 		}
 	}

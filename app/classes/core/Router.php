@@ -4,21 +4,21 @@ class Router {
 
 	public static $routes = array();
 
-	public static function url($path='/',$fullBase=false,$rewrite=null){
+	public static function url($path = '/', $fullBase = false, $rewrite = null) {
 
-		if(empty($path)){
+		if(empty($path)) {
 			$path = '/';
 		}
 
-		if(is_null($rewrite)){
+		if(is_null($rewrite)) {
 			$rewrite = isset($_GET['REWRITE_ENABLED']);
 		}
 
-		if($rewrite){
+		if($rewrite) {
 			return Utils::baseUrl($fullBase) .'/'. trim($path,'/');
 		}
 
-		elseif($path == '/'){
+		elseif($path == '/') {
 			$path = '';
 		}
 
@@ -30,7 +30,7 @@ class Router {
 	 * @param bool $include_query_string
 	 * @return string
 	 */
-	public static function currentRoute($base=true,$include_query_string = false) {
+	public static function currentRoute($base = true, $include_query_string = false) {
 
 		$scriptName = $_SERVER['SCRIPT_NAME'];
 		$requestUri =  urldecode($_SERVER['REQUEST_URI']);
@@ -59,7 +59,7 @@ class Router {
 		return (($base ? Utils::baseUrl() : '') . $pathInfo);
 	}
 
-	public static function connect($path,$callback,$options=array()) {
+	public static function connect($path,$callback,$options = array()) {
 
 		if($path == ''){
 			return;
@@ -68,33 +68,33 @@ class Router {
 		$path = self::fixPath($path);
 		$pathKey = md5($path);
 
-		if(array_key_exists($pathKey,self::$routes)){
+		if(array_key_exists($pathKey,self::$routes)) {
 			return;
 		}
 
-		if(substr($path,-1) !== '/'){
+		if(substr($path,-1) !== '/') {
 			$path .= '/';
 		}
 
-		if(substr($path,-1) !== '?'){
+		if(substr($path,-1) !== '?') {
 			$path .= '?';
 		}
 
-		if(isset($options['path'])){
+		if(isset($options['path'])) {
 			unset($options['path']);
 		}
 
-		if(isset($options['callback'])){
+		if(isset($options['callback'])) {
 			unset($options['callback']);
 		}
 
 		self::$routes[$pathKey] = (
 			array(
-				'path'=>$path,
-				'callback'=>$callback
+				'path' => $path,
+				'callback' => $callback
 			)+
 			array(
-				'options'=>$options
+				'options' => $options
 			)
 		);
 	}
@@ -114,13 +114,13 @@ class Router {
 
 			$regx = '#^'. $route['path'] .'$#';
 
-			if(preg_match($regx,$currentRote,$args) === 1){
+			if(preg_match($regx,$currentRote,$args) === 1) {
 
 				array_shift($args);
 
 				return array(
-					'route'=>$route,
-					'args'=>$args,
+					'route' => $route,
+					'args' => $args,
 					'options'
 				);
 

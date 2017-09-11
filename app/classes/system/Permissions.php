@@ -1,13 +1,13 @@
 <?php
 
-class Permissions extends Obj{
+class Permissions extends Obj {
 
 	public function checkIfUserAllowedToAccess() {
 
 		$page = trim(Router::currentRoute(false),'/');
 		$page = trim($page);
 
-		if($page == ''){
+		if($page == '') {
 			$page = 'index';
 		}
 
@@ -17,17 +17,17 @@ class Permissions extends Obj{
 			return true;
 		}
 
-		if(!Utils::isUserLoggedIn()){
+		if(!Utils::isUserLoggedIn()) {
 			throw new unauthorizedException;
 		}
 
 		$current_user_id = Utils::currentUserInfo('id');
 
-		if($this->isAdmin($current_user_id)){
+		if($this->isAdmin($current_user_id)) {
 			return true;
 		}
 
-		if(!$this->isUserAuthorisedToAccessPage($current_user_id,$pageDetails['id'])){
+		if(!$this->isUserAuthorisedToAccessPage($current_user_id,$pageDetails['id'])) {
 			throw new unauthorizedException;
 		}
 	}
@@ -56,9 +56,9 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 
 		$per = $this->getDb()->getOne('permissions_users',
 			array(
-				'where'=>array(
-					'permission_id'=>$permission_id,
-					'user_id'=>$user_id
+				'where' => array(
+					'permission_id' => $permission_id,
+					'user_id' => $user_id
 				)
 			)
 		);
@@ -72,8 +72,8 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 
 			$pid = $this->getDb()->insert('permissions_users',
 				array(
-					'permission_id'=>$permission_id,
-					'user_id'=>$user_id,
+					'permission_id' => $permission_id,
+					'user_id' => $user_id,
 				)
 			);
 
@@ -90,17 +90,17 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 		foreach ($permissions as $per) {
 
 			//don't remove admin permission from the first user (aka from admin)
-			if($user_id == 1 && $per['id'] == 1){
+			if($user_id == 1 && $per['id'] == 1) {
 				continue;
 			}
 
-			if($per['active'] == 1){
+			if($per['active'] == 1) {
 
 				$this->getDb()->delete('permissions_users',
 					array(
-						'where'=>array(
-							'user_id'=>$user_id,
-							'permission_id'=>$per['id'],
+						'where' => array(
+							'user_id' => $user_id,
+							'permission_id' => $per['id'],
 						)
 					)
 				);
@@ -113,9 +113,9 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 
 		$per = $this->getDb()->getOne('pages_permissions',
 			array(
-				'where'=>array(
-					'permission_id'=>$permission_id,
-					'page_id'=>$page_id
+				'where' => array(
+					'permission_id' => $permission_id,
+					'page_id' => $page_id
 				)
 			)
 		);
@@ -129,8 +129,8 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 
 			$pid = $this->getDb()->insert('pages_permissions',
 				array(
-					'permission_id'=>$permission_id,
-					'page_id'=>$page_id,
+					'permission_id' => $permission_id,
+					'page_id' => $page_id,
 				)
 			);
 
@@ -147,17 +147,17 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 		foreach ($permissions as $per) {
 
 			//don't remove admin permission
-			if($per['id'] == 1){
+			if($per['id'] == 1) {
 				continue;
 			}
 
-			if($per['active'] == 1){
+			if($per['active'] == 1) {
 
 				$this->getDb()->delete('pages_permissions',
 					array(
-						'where'=>array(
-							'page_id'=>$page_id,
-							'permission_id'=>$per['id'],
+						'where' => array(
+							'page_id' => $page_id,
+							'permission_id' => $per['id'],
 						)
 					)
 				);
@@ -168,15 +168,15 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 	public function isAdmin($user_id) {
 
 		//first user is admin
-		if($user_id == 1){
+		if($user_id == 1) {
 			return true;
 		}
 
 		$p = $this->getDb()->getOne('permissions_users',
 			array(
-				'where'=>array(
-					'user_id'=>$user_id,
-					'permission_id'=>1
+				'where' => array(
+					'user_id' => $user_id,
+					'permission_id' => 1
 				)
 			)
 		);
@@ -184,7 +184,7 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 		return !empty($p);
 	}
 
-	public function getAll($type=null) {
+	public function getAll($type = null) {
 
 		if($type === 'list'){
 			return $this->getDb()->getList('permissions',array('id','name'));
@@ -200,18 +200,18 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 				'name'=>$name
 			),
 			array(
-				'where'=>array(
-					'id'=>$id
+				'where' => array(
+					'id' => $id
 				)
 			)
 		);
 	}
 
-	public function add($name=null) {
+	public function add($name = null) {
 
 		return $this->getDb()->insert('permissions',
 			array(
-				'name'=>$name
+				'name' => $name
 			)
 		);
 	}
@@ -220,8 +220,8 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 
 		return $this->getDb()->getOne('permissions',
 			array(
-				'where'=>array(
-					$field=>$value
+				'where' => array(
+					$field => $value
 				)
 			)
 		);
@@ -245,19 +245,19 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 			)
 		);
 
-		foreach ($permissionsUser as $k=>$pu) {
+		foreach ($permissionsUser as $k => $pu) {
 			$permissionsUserList[$pu['permission_id']] = 1;
 		}
 
-		foreach ($permissions as $k=>$p) {
+		foreach ($permissions as $k => $p) {
 
 			$i = array(
-				'id'=>$k,
-				'name'=>$p,
-				'active'=>0
+				'id' => $k,
+				'name' => $p,
+				'active' => 0
 			);
 
-			if(isset($permissionsUserList[$k])){
+			if(isset($permissionsUserList[$k])) {
 				$i['active'] = 1;
 			}
 
@@ -273,7 +273,7 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 
 		$permissionsIds = array_keys($permissions);
 
-		$output = $permissionsPageist =	 array();
+		$output = $permissionsPageist = array();
 
 		$permissionsUser = $this->getDb()->query(
 			sprintf(
@@ -284,19 +284,19 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 			)
 		);
 
-		foreach ($permissionsUser as $k=>$pp) {
+		foreach ($permissionsUser as $k => $pp) {
 			$permissionsPageList[$pp['permission_id']] = 1;
 		}
 
-		foreach ($permissions as $k=>$p) {
+		foreach ($permissions as $k => $p) {
 
 			$i = array(
-				'id'=>$k,
-				'name'=>$p,
-				'active'=>0
+				'id' => $k,
+				'name' => $p,
+				'active' => 0
 			);
 
-			if(isset($permissionsPageList[$k])){
+			if(isset($permissionsPageList[$k])) {
 				$i['active'] = 1;
 			}
 

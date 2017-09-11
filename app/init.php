@@ -11,7 +11,7 @@ if(!defined('IS_DEBUG')){
 }
 
 if(!defined('APP_NAME')){
-	define('APP_NAME', 'PerunioCMS');
+	define('APP_NAME', 'PerunioUMS');
 }
 
 if(!defined('APP_VER')){

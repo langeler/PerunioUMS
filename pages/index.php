@@ -15,7 +15,7 @@
 			Welcome to
 			<?php
 				// Print website name
-				echo getOption('website_name','PerunioCMS');
+				echo getOption('website_name','PerunioUMS');
 			?>
 		</h1>
 		<p>

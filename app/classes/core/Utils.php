@@ -2,9 +2,9 @@
 
 class Utils {
 
-	public static function getDirectoryFiles($dir = null, $pattern = '*.php',$file_name_only=true){
+	public static function getDirectoryFiles($dir = null, $pattern = '*.php',$file_name_only = true) {
 
-		if(is_null($dir)){
+		if(is_null($dir)) {
 			return array();
 		}
 
@@ -13,11 +13,11 @@ class Utils {
 
 		foreach ($files as $file) {
 
-			if($file_name_only){
+			if($file_name_only) {
 				$output[] = pathinfo($file,PATHINFO_FILENAME);
 			}
 
-			else{
+			else {
 				$output[] = $file;
 			}
 		}
@@ -27,9 +27,9 @@ class Utils {
 
 	public static function h($value) {
 
-		if(is_array($value)){
+		if(is_array($value)) {
 
-			foreach ($value as $k=>$v) {
+			foreach ($value as $k => $v) {
 				$value[$k] = Utils::h($v);
 			}
 
@@ -43,7 +43,7 @@ class Utils {
 		return date($format,time());
 	}
 
-	public static function trimfy($value='') {
+	public static function trimfy($value = '') {
 		return is_array($value) ? array_map('trimfy', $value) : trim($value);
 	}
 
@@ -52,7 +52,7 @@ class Utils {
 	 * @return string
 	 */
 
-	public static function baseUrl($fullBase=false){
+	public static function baseUrl($fullBase = false) {
 
 		$scriptName = $_SERVER['SCRIPT_NAME'];
 
@@ -62,7 +62,7 @@ class Utils {
 
 		$basePath = implode('/',$parts);
 
-		if($fullBase){
+		if($fullBase) {
 
 			$host = $_SERVER['HTTP_HOST'];
 			$host = rtrim($host,'/');
@@ -84,7 +84,7 @@ class Utils {
 
 		$proto = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
 
-		if($type == 401){
+		if($type == 401) {
 			header($proto . ' 401 Unauthorized',true,401);
 		}
 
@@ -119,7 +119,7 @@ class Utils {
 
 	public static function hashPassword($plain = '') {
 
-		if(function_exists('password_hash')){
+		if(function_exists('password_hash')) {
 			return password_hash($plain,PASSWORD_BCRYPT);
 		}
 
@@ -127,25 +127,25 @@ class Utils {
 
 		$hash = sha1($plain.$salt);
 
-		for($i=0;$i<10;++$i) {
+		for($i = 0;$i < 10;++$i) {
 			$hash = sha1($hash.$salt.$i);
 		}
 
 		return $hash;
 	}
 
-	public static function checkPassword($plain,$hash) {
+	public static function checkPassword($plain, $hash) {
 
-		if(function_exists('password_hash')){
-			return password_verify($plain,$hash);
+		if(function_exists('password_hash')) {
+			return password_verify($plain, $hash);
 		}
 
 		return (self::hashPassword($plain) === $hash);
 	}
 
-	public static function redirect($path='/') {
+	public static function redirect($path = '/') {
 
-		if(preg_match('/^https?:\/\/|\/\//',$path) == 0){
+		if(preg_match('/^https?:\/\/|\/\//', $path) == 0) {
 			$path = Router::Url($path);
 		}
 
@@ -154,23 +154,23 @@ class Utils {
 	}
 
 	public static function assetUrl($url = null) {
-		return Router::url($url,true,true);
+		return Router::url($url, true, true);
 	}
 
 	public static function isPost() {
 		return (strtolower($_SERVER['REQUEST_METHOD']) == 'post');
 	}
 
-	public static function addFlash($message = '',$type='info'){
+	public static function addFlash($message = '', $type = 'info') {
 
 		if(!isset($_SESSION['_FLASHES'])){
 			$_SESSION['_FLASHES'] = array();
 		}
 
-		$_SESSION['_FLASHES'][] = array('message'=>$message,'type'=>$type);
+		$_SESSION['_FLASHES'][] = array('message' => $message,'type' => $type);
 	}
 
-	public static function getFlashes(){
+	public static function getFlashes() {
 
 		$flashes = (isset($_SESSION['_FLASHES']) ? $_SESSION['_FLASHES'] : array());
 
@@ -179,13 +179,13 @@ class Utils {
 	}
 
 	/* captcha */
-	public static function checkCaptcha(){
+	public static function checkCaptcha() {
 
-		if(!isset($_SESSION['CAPTCHA_SEC_CODE'])){
+		if(!isset($_SESSION['CAPTCHA_SEC_CODE'])) {
 			return false;
 		}
 
-		if(!isset($_POST['captcha_code'])){
+		if(!isset($_POST['captcha_code'])) {
 			return false;
 		}
 
@@ -196,9 +196,9 @@ class Utils {
 	}
 
 	/* validations */
-	public static function isAlphanumeric($txt=null){
+	public static function isAlphanumeric($txt = null) {
 
-		if(empty($txt)){
+		if(empty($txt)) {
 			return false;
 		}
 
@@ -209,43 +209,43 @@ class Utils {
 		return true;
 	}
 
-	public static function isEmail( $email ) {
+	public static function isEmail($email) {
 
-		if(empty($email)){
+		if(empty($email)) {
 			return false;
 		}
 
-		if ( strpos( $email, '@', 1 ) === false ) {
+		if (strpos($email, '@', 1 ) === false) {
 			return false;
 		}
 
-		list( $local, $domain ) = explode( '@', $email, 2 );
+		list($local, $domain) = explode('@', $email, 2);
 
-		if ( !preg_match( '/^[a-zA-Z0-9!#$%&\'*+\/=?^_`{|}~\.-]+$/', $local ) ) {
+		if (!preg_match( '/^[a-zA-Z0-9!#$%&\'*+\/=?^_`{|}~\.-]+$/', $local)) {
 			return false;
 		}
 
-		if ( preg_match( '/\.{2,}/', $domain ) ) {
+		if (preg_match('/\.{2,}/', $domain)) {
 			return false;
 		}
 
-		if ( trim( $domain, " \t\n\r\0\x0B." ) !== $domain ) {
+		if (trim($domain, " \t\n\r\0\x0B.") !== $domain) {
 			return false;
 		}
 
-		$subs = explode( '.', $domain );
+		$subs = explode('.', $domain);
 
-		if ( 2 > count( $subs ) ) {
+		if (2 > count($subs)) {
 			return false;
 		}
 
-		foreach ( $subs as $sub ) {
+		foreach ($subs as $sub) {
 
-			if ( trim( $sub, " \t\n\r\0\x0B-" ) !== $sub ) {
+			if (trim($sub, " \t\n\r\0\x0B-") !== $sub) {
 				return false;
 			}
 
-			if ( !preg_match('/^[a-z0-9-]+$/i', $sub ) ) {
+			if (!preg_match('/^[a-z0-9-]+$/i', $sub)) {
 				return false;
 			}
 		}
@@ -254,9 +254,9 @@ class Utils {
 	}
 
 	/* mailer */
-	public static function sendMail($to,$subject='',$vars=array(),$template='default') {
+	public static function sendMail($to, $subject = '', $vars = array(), $template = 'default') {
 
-		if(Template::make()->templateExists('emails/'.$template)){
+		if(Template::make()->templateExists('emails/'.$template)) {
 
 			ob_start();
 
@@ -264,11 +264,11 @@ class Utils {
 				Template::make()->getTemplatePath('emails/'.$template),
 				$vars
 			);
-			$body = ob_get_clean();
 
+			$body = ob_get_clean();
 		}
 
-		else{
+		else {
 
 			$body = '=== ' . $subject . ' ===' . "\n\n";
 
@@ -303,17 +303,17 @@ class Utils {
 	}
 
 	/* sessions */
-	public static function authUser($user=null) {
+	public static function authUser($user = null) {
 		$_SESSION['Auth'] = $user;
 	}
 
 	public static function currentUserInfo($key = null) {
 
-		if(static::isUserLoggedIn()){
+		if(static::isUserLoggedIn()) {
 
-			if(!is_null($key)){
+			if(!is_null($key)) {
 
-				if(isset($_SESSION['Auth'][$key])){
+				if(isset($_SESSION['Auth'][$key])) {
 					return $_SESSION['Auth'][$key];
 				}
 

@@ -9,56 +9,56 @@ class Pages extends Obj {
 		parent::__construct();
 
 		$this->defaultPages = array(
-				'index'=>array(
-					'private'=>0,
-					'isAllowedToBePublic'=>true
+				'index' => array(
+					'private' => 0,
+					'isAllowedToBePublic' => true
 				),
-				'login'=>array(
-					'private'=>0,
-					'isAllowedToBePublic'=>true,
-					'isAllowedToBePrivate'=>false
+				'login' => array(
+					'private' => 0,
+					'isAllowedToBePublic' => true,
+					'isAllowedToBePrivate' => false
 				),
 
-				'forgot-password'=>array(
-					'private'=>0,
-					'isAllowedToBePublic'=>true
+				'forgot-password' => array(
+					'private' => 0,
+					'isAllowedToBePublic' => true
 				),
-				'recover-password'=>array(
-					'private'=>0,
-					'isAllowedToBePublic'=>true
+				'recover-password' => array(
+					'private' => 0,
+					'isAllowedToBePublic' => true
 				),
-				'register'=>array(
-					'private'=>0,
-					'isAllowedToBePublic'=>true
+				'register' => array(
+					'private' => 0,
+					'isAllowedToBePublic' => true
 				),
-				'resend-activation'=>array(
-					'private'=>0,
-					'isAllowedToBePublic'=>true
+				'resend-activation' => array(
+					'private' => 0,
+					'isAllowedToBePublic' => true
 				),
-				'account'=>array(
-					'private'=>1,
-					'isAllowedToBePublic'=>false
+				'account' => array(
+					'private' => 1,
+					'isAllowedToBePublic' => false
 				),
-				'admin_configuration'=>array(
-					'private'=>1,
-					'isAllowedToBePublic'=>false
+				'admin_configuration' => array(
+					'private' => 1,
+					'isAllowedToBePublic' => false
 				),
-				'admin_pages'=>array(
-					'private'=>1,
-					'isAllowedToBePublic'=>false
+				'admin_pages' => array(
+					'private' => 1,
+					'isAllowedToBePublic' => false
 				),
-				'admin_permissions'=>array(
-					'private'=>1,
-					'isAllowedToBePublic'=>false
+				'admin_permissions' => array(
+					'private' => 1,
+					'isAllowedToBePublic' => false
 				),
-				'admin_users'=>array(
-					'private'=>1,
-					'isAllowedToBePublic'=>false
+				'admin_users' => array(
+					'private' => 1,
+					'isAllowedToBePublic' => false
 				)
 		);
 	}
 
-	public function checkForNewPages(){
+	public function checkForNewPages() {
 
 		$pages = $this->defaultPages;
 
@@ -69,24 +69,24 @@ class Pages extends Obj {
 		foreach ($availablePages as $p) {
 			if(!isset($pages[$p])){
 				$pages[$p] = array(
-					'private'=>0
+					'private' => 0
 				);
 			}
 		}
 
 		//save new pages if found
-		foreach ($pages as $p=>$v) {
+		foreach ($pages as $p => $v) {
 
-			if( isset($savedPages[$p]) ){
+			if(isset($savedPages[$p])) {
 				continue;
 			}
 
 			$pid = $this->getDb()->insert('pages',array(
-					'name'=>$p,
-					'private'=>$v['private']
+					'name' => $p,
+					'private' => $v['private']
 				));
 
-			if($pid){
+			if($pid) {
 
 				//add admin permission to new pages
 				Permissions::make()->assignPermissionToPage(1,$pid);
@@ -95,19 +95,19 @@ class Pages extends Obj {
 
 		$savedPages = $this->getDb()->getList('pages',array('name','id'));
 
-		foreach ($savedPages as $pn=>$id) {
+		foreach ($savedPages as $pn => $id) {
 
-			if(!isset($pages[$pn])){
+			if(!isset($pages[$pn])) {
 
 				//delete unused page
 				$res = $this->getDb()->delete('pages',array(
-					'where'=>array(
-						'name'=>$pn
+					'where' => array(
+						'name' => $pn
 					)
 				));
 
 				//delete all permissions associated with this page
-				if($res){
+				if($res) {
 
 					$this->getDb()->query(
 
@@ -125,15 +125,15 @@ class Pages extends Obj {
 		return $this->getAll();
 	}
 
-	public function getAll($type=null) {
+	public function getAll($type = null) {
 
-		if($type === 'list'){
+		if($type === 'list') {
 			return $this->getDb()->getList('pages',array('id','name'));
 		}
 
 		return $this->getDb()->get('pages',
 			array(
-				'order'=>array(
+				'order' => array(
 					'id',
 					'asc'
 				)
@@ -145,8 +145,8 @@ class Pages extends Obj {
 
 		return $this->getDb()->getOne('pages',
 			array(
-				'where'=>array(
-					$field=>$value
+				'where' => array(
+					$field => $value
 				)
 			)
 		);
@@ -173,7 +173,7 @@ class Pages extends Obj {
 
 		$page = $this->get($id);
 
-		if(empty($page)){
+		if(empty($page)) {
 			return null;
 		}
 
