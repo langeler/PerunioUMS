@@ -26,7 +26,7 @@ $defaultPages = array(
 foreach ($defaultPages as $path => $action) {
 
 	// Connect a page path and a certain action
-	Router::connect($path,$action);
+	Router::connect($path, $action);
 }
 
 // connect custom pages

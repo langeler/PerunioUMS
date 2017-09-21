@@ -6,7 +6,7 @@
  */
 
 // script name name
-define('APP_NAME','PerunioCMS');
+define('APP_NAME','PerunioUMS');
 
 // script version
 define('APP_VER','1.0');

@@ -2,7 +2,7 @@
 
 require 'init.php';
 
-require INC_DIR . DIRECTORY_SEPARATOR . 'libs' . DIRECTORY_SEPARATOR . 'EasyCaptcha' . DIRECTORY_SEPARATOR . 'php-captcha.inc.php';
+require INC_DIR . DIRECTORY_SEPARATOR . 'libs' . DIRECTORY_SEPARATOR . 'EasyCaptcha' . DIRECTORY_SEPARATOR . 'SecurityCapcha.php';
 
 $fonts = array(
 	'',
@@ -38,7 +38,7 @@ for($i = 0; $i < $cLen; $i++ ) {
 
 $_SESSION['CAPTCHA_SEC_CODE'] = $captchaText;
 
-$oVisualCaptcha = new PhpCaptcha($fonts, strlen($captchaText) * 30+10, 36);
+$oVisualCaptcha = new SecurityCapcha($fonts, strlen($captchaText) * 30+10, 36);
 
 $oVisualCaptcha->UseColour(true);
 

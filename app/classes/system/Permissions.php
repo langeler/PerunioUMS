@@ -2,6 +2,10 @@
 
 class Permissions extends Obj {
 
+	private $table_pu = "permissions_users";
+	private $table_pp = "pages_permissions";
+	private $table_p = "permissions";
+
 	public function checkIfUserAllowedToAccess() {
 
 		$page = trim(Router::currentRoute(false),'/');
@@ -34,15 +38,33 @@ class Permissions extends Obj {
 
 	public function isUserAuthorisedToAccessPage($user_id, $page_id) {
 
-		$q =
-'SELECT pu.id FROM %table_prefix%permissions_users AS pu INNER JOIN %table_prefix%permissions AS p
-ON (pu.permission_id = p.id ) INNER JOIN %table_prefix%pages_permissions AS pp
-ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
+		$query = "SELECT
+				pu.id
+			FROM
+				%table_prefix%" . $this->table_pu . "
+			AS
+				pu
+			INNER JOIN
+				%table_prefix%" . $this->table_p . "
+			AS
+				p
+			ON
+				(pu.permission_id = p.id)
+			INNER JOIN
+				%table_prefix%" . $this->table_pp . "
+			AS
+				pp
+			ON
+				(pp.permission_id = p.id)
+			WHERE
+				pu.user_id = ?
+			AND
+				pp.page_id = ?";
 
-		$q = str_replace('%table_prefix%',$this->getDb()->getPrefix(),$q);
+		$query = str_replace('%table_prefix%',$this->getDb()->getPrefix(), $query);
 
 		$res = $this->getDb()->query(
-			$q,
+			$query,
 			array(
 				$user_id,
 				$page_id
@@ -89,7 +111,7 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 
 		foreach ($permissions as $per) {
 
-			//don't remove admin permission from the first user (aka from admin)
+			// don't remove admin permission from the first user (aka from admin)
 			if($user_id == 1 && $per['id'] == 1) {
 				continue;
 			}
@@ -187,7 +209,13 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 	public function getAll($type = null) {
 
 		if($type === 'list'){
-			return $this->getDb()->getList('permissions',array('id','name'));
+
+			return $this->getDb()->getList('permissions',
+				array(
+					'id',
+					'name'
+				)
+			);
 		}
 
 		return $this->getDb()->get('permissions');
@@ -275,9 +303,20 @@ ON (pp.permission_id = p.id ) WHERE pu.user_id = ? AND pp.page_id = ?';
 
 		$output = $permissionsPageist = array();
 
+		$query = "SELECT
+					*
+				FROM
+					%s
+				WHERE
+					page_id = %s
+				AND
+					permission_id
+				IN
+					(%s)";
+
 		$permissionsUser = $this->getDb()->query(
 			sprintf(
-				'SELECT * FROM %s WHERE page_id = %s AND permission_id IN (%s)',
+				$query,
 				$this->getDb()->getPrefix() . 'pages_permissions',
 				(int)$page_id,
 				implode(',',$permissionsIds)

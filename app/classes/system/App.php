@@ -16,7 +16,7 @@ class App extends Obj{
 		App::processRoute($route['route'],$route['args']);
 	}
 
-	public static function processRoute($route = array(),$args = array()) {
+	public static function processRoute($route = array(), $args = array()) {
 
 		if(is_string($route['callback']) && !is_callable($route['callback'])) {
 
@@ -50,7 +50,7 @@ class App extends Obj{
 
 				call_user_func_array(
 					array($controller,$methodName),
-					$route['options']+$args
+					$route['options'] + $args
 				);
 
 			}

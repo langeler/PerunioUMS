@@ -30,8 +30,7 @@
             Utils::assetUrl('./app/captcha.php') ;?>?_=" alt="Captcha" title="click to get new one"/>
         </div>
         <div class="captcha_input">
-            <input required="required" type="text"
-                   name="captcha_code" class="form-control " placeholder="Captcha code">
+            <input required="required" type="text" name="captcha_code" class="form-control " placeholder="Captcha code">
         </div>
 
         <div class="clearfix"></div>

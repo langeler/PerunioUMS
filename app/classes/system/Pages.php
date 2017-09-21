@@ -9,52 +9,51 @@ class Pages extends Obj {
 		parent::__construct();
 
 		$this->defaultPages = array(
-				'index' => array(
-					'private' => 0,
-					'isAllowedToBePublic' => true
-				),
-				'login' => array(
-					'private' => 0,
-					'isAllowedToBePublic' => true,
-					'isAllowedToBePrivate' => false
-				),
-
-				'forgot-password' => array(
-					'private' => 0,
-					'isAllowedToBePublic' => true
-				),
-				'recover-password' => array(
-					'private' => 0,
-					'isAllowedToBePublic' => true
-				),
-				'register' => array(
-					'private' => 0,
-					'isAllowedToBePublic' => true
-				),
-				'resend-activation' => array(
-					'private' => 0,
-					'isAllowedToBePublic' => true
-				),
-				'account' => array(
-					'private' => 1,
-					'isAllowedToBePublic' => false
-				),
-				'admin_configuration' => array(
-					'private' => 1,
-					'isAllowedToBePublic' => false
-				),
-				'admin_pages' => array(
-					'private' => 1,
-					'isAllowedToBePublic' => false
-				),
-				'admin_permissions' => array(
-					'private' => 1,
-					'isAllowedToBePublic' => false
-				),
-				'admin_users' => array(
-					'private' => 1,
-					'isAllowedToBePublic' => false
-				)
+			'index' => array(
+				'private' => 0,
+				'isAllowedToBePublic' => true
+			),
+			'login' => array(
+				'private' => 0,
+				'isAllowedToBePublic' => true,
+				'isAllowedToBePrivate' => false
+			),
+			'forgot-password' => array(
+				'private' => 0,
+				'isAllowedToBePublic' => true
+			),
+			'recover-password' => array(
+				'private' => 0,
+				'isAllowedToBePublic' => true
+			),
+			'register' => array(
+				'private' => 0,
+				'isAllowedToBePublic' => true
+			),
+			'resend-activation' => array(
+				'private' => 0,
+				'isAllowedToBePublic' => true
+			),
+			'account' => array(
+				'private' => 1,
+				'isAllowedToBePublic' => false
+			),
+			'admin_configuration' => array(
+				'private' => 1,
+				'isAllowedToBePublic' => false
+			),
+			'admin_pages' => array(
+				'private' => 1,
+				'isAllowedToBePublic' => false
+			),
+			'admin_permissions' => array(
+				'private' => 1,
+				'isAllowedToBePublic' => false
+			),
+			'admin_users' => array(
+				'private' => 1,
+				'isAllowedToBePublic' => false
+			)
 		);
 	}
 
@@ -62,12 +61,19 @@ class Pages extends Obj {
 
 		$pages = $this->defaultPages;
 
-		$savedPages = $this->getDb()->getList('pages',array('name','id'));
+		$savedPages = $this->getDb()->getList('pages',
+			array(
+				'name',
+				'id'
+			)
+		);
 
 		$availablePages =	 Utils::getDirectoryFiles(PAGES_DIR);
 
 		foreach ($availablePages as $p) {
-			if(!isset($pages[$p])){
+
+			if(!isset($pages[$p])) {
+
 				$pages[$p] = array(
 					'private' => 0
 				);
@@ -81,30 +87,39 @@ class Pages extends Obj {
 				continue;
 			}
 
-			$pid = $this->getDb()->insert('pages',array(
+			$pid = $this->getDb()->insert('pages',
+				array(
 					'name' => $p,
 					'private' => $v['private']
-				));
+				)
+			);
 
 			if($pid) {
 
 				//add admin permission to new pages
-				Permissions::make()->assignPermissionToPage(1,$pid);
+				Permissions::make()->assignPermissionToPage(1, $pid);
 			}
 		}
 
-		$savedPages = $this->getDb()->getList('pages',array('name','id'));
+		$savedPages = $this->getDb()->getList('pages',
+			array(
+				'name',
+				'id'
+			)
+		);
 
 		foreach ($savedPages as $pn => $id) {
 
 			if(!isset($pages[$pn])) {
 
 				//delete unused page
-				$res = $this->getDb()->delete('pages',array(
-					'where' => array(
-						'name' => $pn
+				$res = $this->getDb()->delete('pages',
+					array(
+						'where' => array(
+							'name' => $pn
+							)
 					)
-				));
+				);
 
 				//delete all permissions associated with this page
 				if($res) {
@@ -128,7 +143,13 @@ class Pages extends Obj {
 	public function getAll($type = null) {
 
 		if($type === 'list') {
-			return $this->getDb()->getList('pages',array('id','name'));
+
+			return $this->getDb()->getList('pages',
+				array(
+					'id',
+					'name'
+				)
+			);
 		}
 
 		return $this->getDb()->get('pages',
@@ -156,13 +177,13 @@ class Pages extends Obj {
 
 		$page = $this->get($id);
 
-		if(empty($page)){
+		if(empty($page)) {
 			return null;
 		}
 
 		$pageName = $page['name'];
 
-		if( isset($this->defaultPages[$pageName],$this->defaultPages[$pageName]['isAllowedToBePrivate']) ){
+		if( isset($this->defaultPages[$pageName], $this->defaultPages[$pageName]['isAllowedToBePrivate']) ){
 			return $this->defaultPages[$pageName]['isAllowedToBePrivate'];
 		}
 
@@ -179,7 +200,7 @@ class Pages extends Obj {
 
 		$pageName = $page['name'];
 
-		if( isset($this->defaultPages[$pageName],$this->defaultPages[$pageName]['isAllowedToBePublic']) ){
+		if( isset($this->defaultPages[$pageName], $this->defaultPages[$pageName]['isAllowedToBePublic']) ){
 			return $this->defaultPages[$pageName]['isAllowedToBePublic'];
 		}
 

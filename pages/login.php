@@ -31,7 +31,7 @@
 				</small>
 			</p>
 
-			<button type="submit" class="btn btn-default">Register</button>
+			<button type="submit" class="btn btn-default">Login</button>
 		</form>
 	</div>
 </div>
